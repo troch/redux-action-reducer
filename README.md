@@ -25,7 +25,6 @@ An `actionHandler` is an action type (String) or a list of action types (Array) 
 ```js
 [ 'ACTION1', (state, payload) => ({ ...state, [payload.id]: payload }) ]
 ```
-- etc...
 
 
 ## Examples
