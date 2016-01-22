@@ -29,15 +29,43 @@ An `actionHandler` is an action type (String) or a list of action types (Array) 
 
 ## Examples
 
-#### Single-action reducer, primitive value
+#### Full example
+
+We have search a list of items and select them.
 
 ```js
-import { SEARCH } from './actionTypes';
+import { combineReducers } from 'redux';
+import createReducer from 'redux-action-reducer';
+import { SEARCH, CLEAR_SEARCH, ADD_ITEM, REMOVE_ITEM, EMPTY } from './actionTypes';
+
+const search = createReducer(
+    SEARCH,
+    [ CLEAR_SEARCH, () => '' ]
+)('');
+
+
+const selectedItems = createReducer(
+    [ ADD_ITEM, (state, payload) => state.concat(payload) ],
+    [ REMOVE_ITEM, (state, payload) => state.filter(item => item !== payload) ],
+    [ EMPTY, () => [] ]
+)('');
+
+export default combineReducers({
+    search,
+    selectedItems
+});
+
+```
+
+#### Single action reducer, primitive value
+
+```js
+import { SELECT_TAB } from './actionTypes';
 import createReducer from 'redux-action-reducer';
 
-function search(state = '', action) {
+function search(state = 'info', action) {
     switch (action.type) {
-        case SEARCH:
+        case SELECT_TAB:
             return action.payload;
 
         default:
@@ -49,10 +77,43 @@ function search(state = '', action) {
 __becomes:__
 
 ```js
-import { SEARCH } from './actionTypes';
+import { SELECT_TAB } from './actionTypes';
 import createReducer from 'redux-action-reducer';
 
-const search = createReducer(SEARCH)('');
+const search = createReducer(SELECT_TAB)('info');
+```
+
+
+#### Multiple action reducer, primitive value
+
+```js
+import { SEARCH, CLEAR_SEARCH } from './actionTypes';
+import createReducer from 'redux-action-reducer';
+
+function search(state = '', action) {
+    switch (action.type) {
+        case SEARCH:
+            return action.payload;
+
+        case CLEAR_SEARCH:
+            return '';
+
+        default:
+            return state;
+    }
+}
+```
+
+__becomes:__
+
+```js
+import { SEARCH, CLEAR_SEARCH } from './actionTypes';
+import createReducer from 'redux-action-reducer';
+
+const search = createReducer(
+    SEARCH,
+    [ CLEAR_SEARCH, () => '' ]
+)('');
 ```
 
 #### Multiple-action reducer, array
@@ -84,7 +145,7 @@ __becomes:__
 import { ADD_ITEM, REMOVE_ITEM, EMPTY } from './actionTypes';
 import createReducer from 'redux-action-reducer';
 
-const search = createReducer(
+const selectedItems = createReducer(
     [ ADD_ITEM, (state, payload) => state.concat(payload) ],
     [ REMOVE_ITEM, (state, payload) => state.filter(item => item !== payload) ],
     [ EMPTY, () => [] ]
