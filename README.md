@@ -41,7 +41,6 @@ const search = createReducer(
     [ CLEAR_SEARCH, () => '' ]
 )('');
 
-
 const selectedItems = createReducer(
     [ ADD_ITEM, (state, payload) => state.concat(payload) ],
     [ REMOVE_ITEM, (state, payload) => state.filter(item => item !== payload) ],
@@ -58,9 +57,6 @@ export default combineReducers({
 #### Single action reducer, primitive value
 
 ```js
-import { SELECT_TAB } from './actionTypes';
-import createReducer from 'redux-action-reducer';
-
 function search(state = 'info', action) {
     switch (action.type) {
         case SELECT_TAB:
@@ -75,7 +71,6 @@ function search(state = 'info', action) {
 __becomes:__
 
 ```js
-import { SELECT_TAB } from './actionTypes';
 import createReducer from 'redux-action-reducer';
 
 const search = createReducer(SELECT_TAB)('info');
@@ -85,9 +80,6 @@ const search = createReducer(SELECT_TAB)('info');
 #### Multiple action reducer, primitive value
 
 ```js
-import { SEARCH, CLEAR_SEARCH } from './actionTypes';
-import createReducer from 'redux-action-reducer';
-
 function search(state = '', action) {
     switch (action.type) {
         case SEARCH:
@@ -105,9 +97,6 @@ function search(state = '', action) {
 __becomes:__
 
 ```js
-import { SEARCH, CLEAR_SEARCH } from './actionTypes';
-import createReducer from 'redux-action-reducer';
-
 const search = createReducer(
     SEARCH,
     [ CLEAR_SEARCH, () => '' ]
@@ -117,9 +106,6 @@ const search = createReducer(
 #### Multiple-action reducer, array
 
 ```js
-import { ADD_ITEM, REMOVE_ITEM, EMPTY } from './actionTypes';
-import createReducer from 'redux-action-reducer';
-
 function selectedItems(state = [], action) {
     switch (action.type) {
         case ADD_ITEM:
@@ -140,9 +126,6 @@ function selectedItems(state = [], action) {
 __becomes:__
 
 ```js
-import { ADD_ITEM, REMOVE_ITEM, EMPTY } from './actionTypes';
-import createReducer from 'redux-action-reducer';
-
 const selectedItems = createReducer(
     [ ADD_ITEM, (state, payload) => state.concat(payload) ],
     [ REMOVE_ITEM, (state, payload) => state.filter(item => item !== payload) ],
