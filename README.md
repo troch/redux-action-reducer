@@ -29,7 +29,7 @@ An `actionHandler` is an action type (String) or a list of action types (Array) 
 
 #### Full example
 
-We have search a list of items and select them.
+We can search a list of items, add or remove them from a list and empty that list.
 
 ```js
 import { combineReducers } from 'redux';
