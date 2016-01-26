@@ -1,6 +1,6 @@
 {
   "name": "redux-action-reducer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Remove redux reducer boilerplate",
   "main": "dist/index.js",
   "scripts": {
