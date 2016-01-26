@@ -2,7 +2,7 @@
   "name": "redux-action-reducer",
   "version": "1.0.0",
   "description": "Remove redux reducer boilerplate",
-  "main": "modules/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "rimraf dist && babel modules --out-dir dist",
     "test": "mocha --compilers js:babel-core/register"
