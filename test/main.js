@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import createReducer from '../modules';
+import createReducer, { whenError, whenSuccess } from '../modules';
 
 describe('createReducer', () => {
     it('should reduce a single action with identity function', () => {
@@ -36,5 +36,33 @@ describe('createReducer', () => {
 
         state = reducer(state, { type: 'RESET', payload: 'item1' });
         expect(state).to.eql([]);
+    });
+});
+
+describe('whenError', () => {
+    it('should only reduce error payloads', () => {
+        const reducer = createReducer(
+            [ 'RECEIVE_ITEMS', whenError((state, payload) => payload) ]
+        )(null);
+
+        let state = reducer(null, { type: 'RECEIVE_ITEMS', payload: [ 'item1', 'item2' ] });
+        expect(state).to.equal(null);
+
+        state = reducer(state, { type: 'RECEIVE_ITEMS', payload: { status: 500 }, error: true });
+        expect(state).to.eql({ status: 500 });
+    });
+});
+
+describe('whenSuccess', () => {
+    it('should only reduce error payloads', () => {
+        const reducer = createReducer(
+            [ 'RECEIVE_ITEMS', whenSuccess((state, payload) => state.concat(payload)) ]
+        )([]);
+
+        let state = reducer([], { type: 'RECEIVE_ITEMS', payload: { status: 500 }, error: true });
+        expect(state).to.eql([]);
+
+        state = reducer(state, { type: 'RECEIVE_ITEMS', payload: [ 'item1', 'item2' ] });
+        expect(state).to.eql([ 'item1', 'item2' ]);
     });
 });
