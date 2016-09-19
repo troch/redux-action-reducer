@@ -1,2 +1,5 @@
 **/.*
-test
+/modules
+/test
+*.yml
+*.md

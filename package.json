@@ -1,10 +1,10 @@
 {
   "name": "redux-action-reducer",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Remove redux reducer boilerplate",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
-    "build": "rimraf dist && babel modules --out-dir dist",
+    "build": "rimraf dist && babel modules --out-dir ./",
     "test": "mocha --compilers js:babel-core/register"
   },
   "repository": {
@@ -23,10 +23,10 @@
   },
   "homepage": "https://github.com/troch/redux-action-reducer#readme",
   "devDependencies": {
-    "babel-core": "^6.4.5",
-    "babel-preset-es2015": "^6.3.13",
-    "chai": "^3.4.1",
-    "mocha": "^2.3.4",
-    "rimraf": "^2.5.0"
+    "babel-core": "^6.14.0",
+    "babel-preset-es2015": "^6.14.0",
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2",
+    "rimraf": "^2.5.4"
   }
 }
