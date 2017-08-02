@@ -30,18 +30,18 @@ An `actionHandler` is an action type (String) or a list of action types (Array) 
 `whenError` will only apply to actions with `error: true`, the current `state` will be returned if an action is not an error. `successReducer` works the
 other way round.
 
-`whenError` and `whenSuccess` both accept a reducer function `(action, payload) => /*...*/`.
+`whenError` and `whenSuccess` both accept a reducer function `(state, payload) => /*...*/`.
 
 ```js
 import createReducer, { whenSuccess } from 'redux-action-reducer';
 
 const list = createReducer(
-    [ 'ACTION', whenSuccess((action, payload) => state.concat(payload))]
+    [ 'ACTION', whenSuccess((state, payload) => state.concat(payload))]
 );
 
 // Instead of
 const list = createReducer(
-    [ 'ACTION', (action, payload, error) => error ? state : state.concat(payload)) ]
+    [ 'ACTION', (state, payload, error) => error ? state : state.concat(payload)) ]
 );
 ```
 
