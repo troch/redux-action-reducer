@@ -47,7 +47,7 @@ const list = createReducer(
 
 If a reducer is not supplied, `payload` will be returned.
 
-##  extendReducer(reducer, ...actionHandlers)(defaultValue)
+##  extendReducer(reducer)(...actionHandlers)(defaultValue)
 
 Re-use an existing reducer and extend it with extra handlers using this pattern, for example:
 
