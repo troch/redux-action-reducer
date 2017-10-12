@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import createReducer, { whenError, whenSuccess } from '../modules';
+import createReducer, { whenError, whenSuccess, extendReducer } from '../modules';
 
 describe('createReducer', () => {
     it('should reduce a single action with identity function', () => {
@@ -14,7 +14,7 @@ describe('createReducer', () => {
         let state = reducer('', { type: 'SEARCH', payload: 'abc' });
         expect(state).to.equal('abc');
 
-        state = reducer(state, { type: 'SEARCH', payload: 'def' });
+        state = reducer(state, { type: 'SEARCH_AGAIN', payload: 'def' });
         expect(state).to.equal('def');
     });
 
@@ -65,4 +65,41 @@ describe('whenSuccess', () => {
         state = reducer(state, { type: 'RECEIVE_ITEMS', payload: [ 'item1', 'item2' ] });
         expect(state).to.eql([ 'item1', 'item2' ]);
     });
+});
+
+describe('extendReducer', () => {
+  it('should reduce a single action with custom action reducers', () => {
+      const reducer = createReducer('SEARCH')('');
+      const extendedReducer = extendReducer(reducer)([ 'RESET', () => '' ])('')
+      let state = extendedReducer('', { type: 'SEARCH', payload: 'abc' });
+      expect(state).to.equal('abc');
+      state = extendedReducer(state, { type: 'RESET' });
+      expect(state).to.equal('');
+  });
+
+  it('should extend a single action with another single action', () => {
+      const reducer = createReducer('SEARCH')('');
+      const extendedReducer = extendReducer(reducer)('SEARCH_AGAIN')('')
+      let state = extendedReducer('', { type: 'SEARCH', payload: 'abc' });
+      expect(state).to.equal('abc');
+      state = extendedReducer(state, { type: 'SEARCH_AGAIN', payload: 'def' });
+      expect(state).to.equal('def');
+  });
+
+  it('should reduce multiple actions with custom action reducers', () => {
+      const reducer = createReducer([ 'SEARCH', 'SEARCH_AGAIN' ])('');
+      const extendedReducer = extendReducer(reducer)([ 'RESET', 'EMPTY', () => ''])('')
+
+      let state = extendedReducer('', { type: 'SEARCH', payload: 'abc' });
+      expect(state).to.equal('abc');
+
+      state = extendedReducer(state, { type: 'RESET' });
+      expect(state).to.equal('');
+
+      state = extendedReducer(state, { type: 'SEARCH_AGAIN', payload: 'def' });
+      expect(state).to.equal('def');
+
+      state = extendedReducer(state, { type: 'EMPTY' });
+      expect(state).to.equal('');
+  });
 });

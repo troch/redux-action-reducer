@@ -47,6 +47,48 @@ const list = createReducer(
 
 If a reducer is not supplied, `payload` will be returned.
 
+##  extendReducer(reducer, ...actionHandlers)(defaultValue)
+
+Re-use an existing reducer and extend it with extra handlers using this pattern, for example:
+
+```js
+const reducer = [ 'ACTION1', (state, payload) => ({ ...state, [payload.id]: payload }) ]
+const reducer2 = extendReducer( reducer, 'ACTION2', [ 'ACTION3', () => ({}) ])
+```
+
+This comes in handy when a common pattern for a reducer can be re-used throughout the application, but sometimes requires extra cases handling.
+
+## Reducer Factories
+
+### What are reducer factories?
+
+In an application it is common for patterns to become reused many times over, in these cases some form of abstraction is useful.
+This library can be used to define a reducer factory that can be re-used throughout the code-base, here is an example.
+
+```js
+// queryReducerFactory.js
+export default ({ setAll, setField, resetAll }) => createReducer(
+  setAll,
+  [ ...setField, (state, payload) => ({ ...state, [payload.id]: payload.value }) ],
+  [ ...resetAll, () => ({}) ]
+)({})
+```
+This factory will create a reducer that can be combined wherever is useful in the state tree (using redux combineReducers), and is generated
+by passing in an object with 3 arrays of actions to perform the functions, setAll, setField and resetAll.
+
+This factory could be implemented as follows:
+
+```js
+import queryReducer from './queryReducerFactory'
+
+const reducer = queryReducer({
+  setAll: [ 'ACTION1', 'ACTION2' ],
+  setField: [ 'ACTION3' ],
+  resetAll: [ 'ACTION4', 'ACTION5' ]
+})
+```
+This gives full flexibility when defining which actions will be allowed to trigger the reducer behaviour.
+Extra cases can be handled in specific instantiations by using the `extendReducer` pattern (Above)
 
 ## Examples
 
