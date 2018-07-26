@@ -1,14 +1,29 @@
 const payloadPassThrough = (state, payload) => payload;
 
+const determineActionReducer = (maybeActionReducer, fallback) => {
+  if (typeof maybeActionReducer === 'function') {
+    return maybeActionReducer
+  }
+  if (typeof maybeActionReducer === 'string') {
+    return fallback
+  }
+  throw new Error('Reducer must either be a function or not present (payloadPassThrough)')
+}
+
 const createReducer = (...actionHandlers) => (defaultValue = null) => {
     const actions = actionHandlers.reduce(
         (acc, actionSpec) => {
             actionSpec = [].concat(actionSpec);
             const last = actionSpec.slice(-1)[0];
-            const actionReducer = typeof last === 'function' ? last : payloadPassThrough;
+            const actionReducer = determineActionReducer(last, payloadPassThrough)
             const actionTypes = actionReducer === payloadPassThrough ? actionSpec : actionSpec.slice(0, -1);
 
-            actionTypes.forEach(actionType => acc[actionType] = actionReducer);
+            actionTypes.forEach(actionType => {
+              if (typeof actionType === 'undefined') {
+                throw new Error('actionTypes cannot be undefined')
+              }
+              acc[actionType] = actionReducer
+            });
             return acc;
         },
         {}

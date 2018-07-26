@@ -37,6 +37,22 @@ describe('createReducer', () => {
         state = reducer(state, { type: 'RESET', payload: 'item1' });
         expect(state).to.eql([]);
     });
+
+    context('actionType of undefined is passed', () => {
+      it('should raise an error', () => {
+        const perform = () => createReducer([undefined, (state, payload) => state])(null)
+
+        expect(perform).to.throw('actionTypes cannot be undefined')
+      })
+    })
+
+    context('reducer is neither a function nor payloadPassThrough', () => {
+      it('shoudl raise an error', () => {
+        const perform = () => createReducer(['ACTION_TYPE', { reducer: 'invalid' }])(null)
+
+        expect(perform).to.throw('Reducer must either be a function or not present (payloadPassThrough)')
+      })
+    })
 });
 
 describe('whenError', () => {
