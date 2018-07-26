@@ -42,15 +42,15 @@ describe('createReducer', () => {
       it('should raise an error', () => {
         const perform = () => createReducer([undefined, (state, payload) => state])(null)
 
-        expect(perform).to.throw('actionTypes cannot be undefined')
+        expect(perform).to.throw('[redux-action-reducer] An action type passed to createReducer is undefined')
       })
     })
 
     context('reducer is neither a function nor payloadPassThrough', () => {
-      it('shoudl raise an error', () => {
+      it('should raise an error', () => {
         const perform = () => createReducer(['ACTION_TYPE', { reducer: 'invalid' }])(null)
 
-        expect(perform).to.throw('Reducer must either be a function or not present (payloadPassThrough)')
+        expect(perform).to.throw('[redux-action-reducer] Arguments passed to createReducer must either contain a reducer function or none at all (payload pass-through).')
       })
     })
 });
