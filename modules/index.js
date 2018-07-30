@@ -1,14 +1,30 @@
 const payloadPassThrough = (state, payload) => payload;
 
+const handlePayloadPassThrough = (actionSpec) => {
+  const maybeActionReducer = actionSpec.slice(-1)[0];
+  const allButLast = actionSpec.slice(0, -1);
+
+  if (typeof maybeActionReducer === 'function') {
+    return { actionTypes: allButLast, actionReducer: maybeActionReducer };
+  }
+  if (typeof maybeActionReducer === 'string') {
+    return { actionTypes: actionSpec, actionReducer: payloadPassThrough };
+  }
+  throw new Error('[redux-action-reducer] Arguments passed to createReducer must either contain a reducer function or none at all (payload pass-through).');
+}
+
 const createReducer = (...actionHandlers) => (defaultValue = null) => {
     const actions = actionHandlers.reduce(
         (acc, actionSpec) => {
             actionSpec = [].concat(actionSpec);
-            const last = actionSpec.slice(-1)[0];
-            const actionReducer = typeof last === 'function' ? last : payloadPassThrough;
-            const actionTypes = actionReducer === payloadPassThrough ? actionSpec : actionSpec.slice(0, -1);
+            const { actionTypes, actionReducer } = handlePayloadPassThrough(actionSpec)
 
-            actionTypes.forEach(actionType => acc[actionType] = actionReducer);
+            actionTypes.forEach(actionType => {
+              if (typeof actionType === 'undefined') {
+                throw new Error('[redux-action-reducer] An action type passed to createReducer is undefined')
+              }
+              acc[actionType] = actionReducer
+            });
             return acc;
         },
         {}
